@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verses of Love and Hope</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Text', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .slide {
+            display: none;
+            padding: 4rem 3rem;
+            text-align: center;
+            min-height: 400px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide:nth-child(1) { background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); }
+        .slide:nth-child(2) { background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%); }
+        .slide:nth-child(3) { background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); }
+        .slide:nth-child(4) { background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%); }
+        .slide:nth-child(5) { background: linear-gradient(45deg, #fa709a 0%, #fee140 100%); }
+        .slide:nth-child(6) { background: linear-gradient(45deg, #a8edea 0%, #fed6e3 100%); }
+        .slide:nth-child(7) { background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 100%); }
+        .slide:nth-child(8) { background: linear-gradient(45deg, #ffecd2 0%, #fcb69f 100%); }
+        .slide:nth-child(9) { background: linear-gradient(45deg, #a18cd1 0%, #fbc2eb 100%); }
+        .slide:nth-child(10) { background: linear-gradient(45deg, #fad0c4 0%, #ffd1ff 100%); }
+
+        .verse-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .verse-reference {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dots-container {
+            position: absolute;
+            bottom: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: width 6s linear;
+            border-radius: 2px;
+        }
+
+        .verse-number {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .slide {
+                padding: 3rem 2rem;
+                min-height: 350px;
+            }
+
+            .verse-text {
+                font-size: 1.5rem;
+            }
+
+            .verse-reference {
+                font-size: 1.1rem;
+            }
+
+            .navigation {
+                bottom: 1rem;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .dots-container {
+                bottom: 4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .slide {
+                padding: 2rem 1.5rem;
+            }
+
+            .verse-text {
+                font-size: 1.3rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Verses of Love and Hope</h1>
+            <p>Find comfort and inspiration in God's Word</p>
+        </div>
+
+        <div class="slideshow-container">
+            <!-- Slide 1: 1 John 3:16-17 -->
+            <div class="slide active">
+                <div class="verse-number">1 / 10</div>
+                <div class="verse-text">
+                    "This is how we know what love is: Jesus Christ laid down his life for us. And we ought to lay down our lives for our brothers and sisters. If anyone has material possessions and sees a brother or sister in need but has no pity on them, how can the love of God be in that person?"
+                </div>
+                <div class="verse-reference">1 John 3:16-17 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 2: 1 John 4:10 -->
+            <div class="slide">
+                <div class="verse-number">2 / 10</div>
+                <div class="verse-text">
+                    "This is love: not that we loved God, but that he loved us and sent his Son as an atoning sacrifice for our sins."
+                </div>
+                <div class="verse-reference">1 John 4:10 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 3: Romans 8:37-39 -->
+            <div class="slide">
+                <div class="verse-number">3 / 10</div>
+                <div class="verse-text">
+                    "No, in all these things we are more than conquerors through him who loved us. For I am convinced that neither death nor life, neither angels nor demons, neither the present nor the future, nor any powers, neither height nor depth, nor anything else in all creation, will be able to separate us from the love of God that is in Christ Jesus our Lord."
+                </div>
+                <div class="verse-reference">Romans 8:37-39 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 4: Colossians 3:12-14 -->
+            <div class="slide">
+                <div class="verse-number">4 / 10</div>
+                <div class="verse-text">
+                    "Therefore, as God's chosen people, holy and dearly loved, clothe yourselves with compassion, kindness, humility, gentleness and patience. Bear with each other and forgive one another if any of you has a grievance against someone. Forgive as the Lord forgave you. And over all these virtues put on love, which binds them all together in perfect unity."
+                </div>
+                <div class="verse-reference">Colossians 3:12-14 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 5: Ephesians 4:31-32 -->
+            <div class="slide">
+                <div class="verse-number">5 / 10</div>
+                <div class="verse-text">
+                    "Get rid of all bitterness, rage and anger, brawling and slander, along with every form of malice. Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you."
+                </div>
+                <div class="verse-reference">Ephesians 4:31-32 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 6: Joshua 1:9 -->
+            <div class="slide">
+                <div class="verse-number">6 / 10</div>
+                <div class="verse-text">
+                    "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."
+                </div>
+                <div class="verse-reference">Joshua 1:9 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 7: Philippians 4:4-9 -->
+            <div class="slide">
+                <div class="verse-number">7 / 10</div>
+                <div class="verse-text">
+                    "Rejoice in the Lord always. I will say it again: Rejoice! Let your gentleness be evident to all. The Lord is near. Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus."
+                </div>
+                <div class="verse-reference">Philippians 4:4-7 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 8: Matthew 6:26 -->
+            <div class="slide">
+                <div class="verse-number">8 / 10</div>
+                <div class="verse-text">
+                    "Look at the birds of the air; they do not sow or reap or store away in barns, and yet your heavenly Father feeds them. Are you not much more valuable than they?"
+                </div>
+                <div class="verse-reference">Matthew 6:26 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 9: Revelation 21:4 -->
+            <div class="slide">
+                <div class="verse-number">9 / 10</div>
+                <div class="verse-text">
+                    "He will wipe every tear from their eyes. There will be no more death or mourning or crying or pain, for the old order of things has passed away."
+                </div>
+                <div class="verse-reference">Revelation 21:4 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Slide 10: Matthew 11:28-30 -->
+            <div class="slide">
+                <div class="verse-number">10 / 10</div>
+                <div class="verse-text">
+                    "Come to me, all you who are weary and burdened, and I will give you rest. Take my yoke upon you and learn from me, for I am gentle and humble in heart, and you will find rest for your souls. For my yoke is easy and my burden is light."
+                </div>
+                <div class="verse-reference">Matthew 11:28-30 NIV</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+                <button class="nav-btn" onclick="toggleAutoplay()" id="playPauseBtn">⏸ Pause</button>
+                <button class="nav-btn" onclick="nextSlide()">Next →</button>
+            </div>
+
+            <!-- Dots indicator -->
+            <div class="dots-container">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+                <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
+                <span class="dot" onclick="currentSlide(7)"></span>
+                <span class="dot" onclick="currentSlide(8)"></span>
+                <span class="dot" onclick="currentSlide(9)"></span>
+                <span class="dot" onclick="currentSlide(10)"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 1;
+        let autoplayInterval;
+        let isAutoplay = true;
+        const slideInterval = 6000; // 6 seconds
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            const progressBars = document.querySelectorAll('.progress-bar');
+            
+            if (n > slides.length) currentSlideIndex = 1;
+            if (n < 1) currentSlideIndex = slides.length;
+            
+            // Hide all slides and reset progress bars
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            progressBars.forEach(bar => {
+                bar.style.width = '0%';
+            });
+            
+            // Show current slide
+            slides[currentSlideIndex - 1].classList.add('active', 'fade-in');
+            dots[currentSlideIndex - 1].classList.add('active');
+            
+            // Start progress bar animation
+            if (isAutoplay) {
+                setTimeout(() => {
+                    progressBars[currentSlideIndex - 1].style.width = '100%';
+                }, 100);
+            }
+        }
+
+        function nextSlide() {
+            currentSlideIndex++;
+            showSlide(currentSlideIndex);
+            resetAutoplay();
+        }
+
+        function prevSlide() {
+            currentSlideIndex--;
+            showSlide(currentSlideIndex);
+            resetAutoplay();
+        }
+
+        function currentSlide(n) {
+            currentSlideIndex = n;
+            showSlide(currentSlideIndex);
+            resetAutoplay();
+        }
+
+        function startAutoplay() {
+            if (isAutoplay) {
+                autoplayInterval = setInterval(() => {
+                    nextSlide();
+                }, slideInterval);
+            }
+        }
+
+        function stopAutoplay() {
+            clearInterval(autoplayInterval);
+        }
+
+        function resetAutoplay() {
+            stopAutoplay();
+            if (isAutoplay) {
+                startAutoplay();
+            }
+        }
+
+        function toggleAutoplay() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            if (isAutoplay) {
+                isAutoplay = false;
+                stopAutoplay();
+                playPauseBtn.innerHTML = '▶ Play';
+                // Reset all progress bars
+                document.querySelectorAll('.progress-bar').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+            } else {
+                isAutoplay = true;
+                playPauseBtn.innerHTML = '⏸ Pause';
+                startAutoplay();
+                // Start progress bar for current slide
+                setTimeout(() => {
+                    document.querySelectorAll('.progress-bar')[currentSlideIndex - 1].style.width = '100%';
+                }, 100);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === ' ') {
+                event.preventDefault();
+                toggleAutoplay();
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextSlide(); // Swipe left - next slide
+            }
+            if (touchEndX > touchStartX + 50) {
+                prevSlide(); // Swipe right - previous slide
+            }
+        }
+
+        // Pause autoplay when window is not visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopAutoplay();
+            } else if (isAutoplay) {
+                resetAutoplay();
+            }
+        });
+
+        // Initialize slideshow
+        showSlide(currentSlideIndex);
+        startAutoplay();
+    </script>
+</body>
+</html>
